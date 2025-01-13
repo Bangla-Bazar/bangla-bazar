@@ -33,3 +33,4 @@ export default function SearchBar({ placeholder, onSearch, onRedirect }) {
         </div>
     );
 }
+

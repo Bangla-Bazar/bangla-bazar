@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,11 +9,14 @@ import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar";
 
 export default function Product() {
+    const [allProducts, setAllProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 50;
     const router = useRouter();
-    const searchParams = useSearchParams(); // Get search parameters
-    const search = searchParams.get("search"); // Extract the 'search' query parameter
+    const searchParams = useSearchParams();
+    const search = searchParams.get("search");
 
     // Fetch all products from Firebase
     useEffect(() => {
@@ -23,28 +27,40 @@ export default function Product() {
                 ...doc.data(),
             }));
             setProducts(productsData);
+            setAllProducts(productsData);
             setFilteredProducts(productsData); // Initialize filteredProducts with all products
         };
         fetchProducts();
     }, []);
 
-    // Filter products based on the search query
     useEffect(() => {
         if (search) {
             const lowercasedQuery = search.toLowerCase();
             const filtered = products.filter((product) =>
-                product.title.toLowerCase().includes(lowercasedQuery)
+                product.title.toLowerCase().includes(lowercasedQuery) ||
+                (product.tags &&
+                    product.tags.some((tag) =>
+                        tag.toLowerCase().includes(lowercasedQuery)
+                    ))
             );
             setFilteredProducts(filtered);
         } else {
-            // If search is empty, reset to all products
-            setFilteredProducts(products);
+            setFilteredProducts(products); // Reset to all products if no search query
         }
     }, [search, products]);
 
-    // Handle search input and update the query parameter
-    const handleSearch = (query) => {
-        router.push(`/product?search=${encodeURIComponent(query)}`);
+
+    // Paginate products
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = filteredProducts.slice(
+        indexOfFirstProduct,
+        indexOfLastProduct
+    );
+
+    // Handle page change
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     return (
@@ -52,17 +68,44 @@ export default function Product() {
             {/* Search Bar */}
             <SearchBar
                 placeholder="Search for products..."
-                onSearch={handleSearch}
+                onSearch={(query) =>
+                    router.push(`/product?search=${encodeURIComponent(query)}`)
+                }
             />
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-6">
-                {filteredProducts.length === 0 ? (
-                    <p className="text-center col-span-3">No products found.</p>
+                {currentProducts.length === 0 ? (
+                    <>
+                        <p className="text-center col-span-5">No Matching Product Found</p>
+                        {/* Render all products */}
+                        {allProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </>
                 ) : (
-                    filteredProducts.map((product) => (
+                    currentProducts.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))
+                )}
+            </div>
+
+            {/* Pagination Buttons */}
+            <div className="flex justify-center mt-6 space-x-2">
+                {Array.from(
+                    { length: Math.ceil(filteredProducts.length / productsPerPage) },
+                    (_, i) => (
+                        <button
+                            key={i + 1}
+                            onClick={() => handlePageChange(i + 1)}
+                            className={`px-4 py-2 rounded ${currentPage === i + 1
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-300 text-black"
+                                }`}
+                        >
+                            {i + 1}
+                        </button>
+                    )
                 )}
             </div>
         </div>
