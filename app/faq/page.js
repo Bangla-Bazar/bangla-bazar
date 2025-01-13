@@ -10,10 +10,30 @@ export default function FAQ() {
     };
 
     const questions = [
-        { question: "What is Grocery Store?", answer: "Grocery Store is your trusted source for fresh and quality groceries, offering a wide range of products for everyday needs." },
-        { question: "How can I place an order?", answer: "To place an order, simply browse our catalog, select the items you want, and proceed to checkout." },
-        { question: "What is your return policy?", answer: "We offer a 30-day return policy for most products. Please check the product page for specific return instructions." },
-        { question: "Do you offer delivery?", answer: "Yes, we offer home delivery within selected areas. Check the delivery section for more details." },
+        { question: "What types of meat do you offer at your store?", 
+            answer: "We offer a wide range of halal meat, including beef, chicken, lamb, goat, and specialty meats. All our products are sourced from trusted suppliers and prepared according to halal standards." },
+        { question: "Is all of your meat halal certified?", 
+            answer: "Yes, all the meat sold at our store is halal certified and comes from trusted halal suppliers to ensure it meets the dietary requirements of our Muslim customers." },
+        { question: "Do you carry Bengali spices and grocery items?", 
+            answer: "Yes, we carry a variety of traditional Bengali spices, rice, lentils, and other essential grocery items, along with international products commonly used in Bengali cuisine." },
+        { question: "Are the products at your store organic?", 
+            answer: "While we offer a variety of organic products, not all of our items are certified organic. Please check the labeling for organic certifications." },
+        {question: "Do you offer home delivery for online orders?", 
+            answer: "Currently, we do not offer home delivery for online orders. You can pick up your order in-store during our regular business hours."},
+        { question: "How do I know if the meat is fresh?",
+            answer: "We prioritize freshness and ensure that all our meat is properly stored, regularly rotated, and sourced from reputable suppliers. We also offer a freshness guarantee." },
+        { question: "Can I pre-order halal meat for a special occasion or event?", 
+            answer: "Currently, we do not offer pre-order services for special occasions or events. However, we do our best to accommodate all your needs during regular business hours." },
+        { question: "Are your grocery products suitable for vegetarians?", 
+            answer: "Yes, we offer a range of vegetarian-friendly products, including fresh vegetables, legumes, and vegetarian snacks." },
+        { question: "What should I do if I'm not satisfied with my purchase?", 
+            answer: "We strive for customer satisfaction. If you are not happy with your purchase, please contact us within 7 days, and we will assist with returns or exchanges." },
+        { question: "Do you have frozen halal meat options available?", 
+            answer: "Yes, we carry a selection of frozen halal meats for customers who prefer them. These products are stored in optimal conditions to maintain freshness." },
+        { question: "Can I pay using my credit/debit card?", 
+            answer: "Yes, we accept a variety of payment methods including credit and debit cards, as well as mobile payment options." },
+        { question: "What is our return policy?", 
+            answer: "We offer a 30-day return policy for most products. Product must not be damaged. Please check the product page for specific return instructions." },
     ];
 
     return (
@@ -29,12 +49,12 @@ export default function FAQ() {
                         <div key={index} className="border-b border-gray-200">
                             <button
                                 onClick={() => toggle(index)}
-                                className="w-full text-left py-4 px-6 bg-white text-lg font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600"
+                                className="w-full text-left py-4 px-6 bg-white text-lg font-medium text-gray-800 hover:bg-gray-100 focus:outline-none"
                             >
                                 {item.question}
                             </button>
                             {open === index && (
-                                <div className="px-6 pb-4 text-gray-600 bg-gray-50">
+                                <div className="px-6 pb-4 text-left text-gray-600 bg-gray-50 mt-2 mb-6">  {/* Added mt-2 and mb-6 for spacing */}
                                     {item.answer}
                                 </div>
                             )}

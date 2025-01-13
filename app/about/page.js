@@ -1,24 +1,27 @@
 export default function About() {
     return (
-        <div className="bg-gray-50 py-12 px-6 sm:px-12 md:px-24">
-            <div className="max-w-3xl mx-auto text-center">
-                <h1 className="text-4xl font-extrabold text-gray-800 mb-6">About Us</h1>
-                <p className="text-lg text-gray-600 mb-8">
-                    Welcome to <span className="font-semibold text-green-600">Grocery Store</span>, your trusted source for fresh and quality groceries. We pride ourselves on providing a wide range of products, from everyday essentials to unique finds, all while delivering top-notch customer service.
-                </p>
-                <div className="flex justify-center space-x-8">
-                    <div className="flex flex-col items-center">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-2">Our Mission</h2>
-                        <p className="text-gray-500">
-                            To make shopping for groceries convenient, affordable, and enjoyable while ensuring the highest quality of products for our customers.
-                        </p>
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <h2 className="text-xl font-semibold text-gray-700 mb-2">Our Values</h2>
-                        <p className="text-gray-500">
-                            We believe in integrity, transparency, and sustainability, ensuring that our products meet both your needs and environmental standards.
-                        </p>
-                    </div>
+        <div className="bg-50 flex flex-col justify-between">
+            {/* Content Section */}
+            <div className="flex flex-col md:flex-row items-center gap-8 px-6 sm:px-12 md:px-24 mb-12">
+                {/* Description Section */}
+                <div className="md:w-1/2 text-center md:text-left">
+                    {/* Title for Description */}
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+                        About Us
+                    </h1>
+                    <p className="text-lg text-center text-gray-700 mb-8">
+                        Welcome to Bangla Bazar, your go-to destination for authentic Bangladeshi groceries and specialty foods. At Bangla Bazar, we bring the rich flavors of Bangladesh directly to you. Whether you're looking for traditional spices, fresh produce, or unique ingredients for your meals, we have it all. We are committed to offering a variety of high-quality products, sourced from trusted suppliers to ensure the best quality.
+                        We take pride in providing excellent customer service, making every visit to Bangla Bazar a great experience. Whether you’re preparing a family meal or exploring new recipes, we have everything you need to complete your kitchen.
+                        Thank you for choosing Bangla Bazar, where you can find both tradition and quality in one place.
+                    </p>
+                </div>
+                {/* Image Section */}
+                <div className="md:w-1/2">
+                    <img
+                        src="/bangla-bazar.jpg"
+                        alt="Store Image"
+                        className="w-full h-auto object-cover rounded-lg shadow-xl"
+                    />
                 </div>
             </div>
         </div>
