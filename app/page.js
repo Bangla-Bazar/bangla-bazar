@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
+import BannerSection from "@/components/BannerSection";
+import TagProductsSlider from "@/components/TagProductsSlider";
+import Categories from "@/components/categories";
 
 export default function Home() {
   const router = useRouter();
@@ -14,11 +17,15 @@ export default function Home() {
 
   return (
     <div className="p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">Welcome to Bangla Bazar</h1>
       <SearchBar
         placeholder="Search for products..."
         onRedirect={handleSearchRedirect}
       />
+      <Categories tags={["Fruit", "Vegetable", "Dairy", "Meat", "Beverage"]} />
+      <BannerSection />
+      <TagProductsSlider tag="Fruit" />
+      <TagProductsSlider tag="Vegetable" />
+
     </div>
   );
 }
