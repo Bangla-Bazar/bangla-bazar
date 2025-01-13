@@ -11,20 +11,20 @@ import Image from "next/image";
 export default function BannerSlider() {
     const slides = [
         {
-            image: "/image.png",
-            title: "SALE",
+            image: "/banana.png",
+            title: "Banana",
             description: "100% natural",
             expiry: "31st Dec, 2025",
         },
         {
-            image: "/image2.png",
-            title: "Fruits & Vegetables",
+            image: "/roti.jpg",
+            title: "Roti",
             description: "20% off",
             expiry: "15th Jan, 2026",
         },
         {
-            image: "/image.png",
-            title: "Baked Products",
+            image: "/apple.jpg",
+            title: "Apple",
             description: "15% off",
             expiry: "10th Feb, 2026",
         },
@@ -50,8 +50,8 @@ export default function BannerSlider() {
                                     <Image
                                         src={slide.image}
                                         alt={slide.title}
-                                        layout="fill"
-                                        objectFit="cover"
+                                        layout="fill" // Use intrinsic to make the image fit its container while maintaining its aspect ratio
+                                        objectFit="contain" // Ensures the image fits within the container
                                         className="rounded-lg"
                                     />
                                 </div>
