@@ -54,7 +54,6 @@ export default function AddProduct() {
                 title,
                 description,
                 price: parseFloat(price),
-                category,
                 tags: selectedTags,
                 imageUrl,
                 isTemporary,
