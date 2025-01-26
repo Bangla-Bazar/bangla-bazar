@@ -1,4 +1,3 @@
-
 "use client";
 import { useState } from "react";
 import Link from "next/link";
@@ -18,7 +17,7 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-white text-black p-5 shadow-sm">
+        <nav className="bg-white text-black p-5 shadow-sm relative z-50">
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <h1 className="text-xl font-bold">
@@ -37,6 +36,7 @@ export default function Navbar() {
                 <ul
                     className={`sm:flex gap-4 absolute sm:static top-16 left-0 w-full sm:w-auto bg-white sm:bg-transparent p-5 sm:p-0 shadow-md sm:shadow-none transition-all duration-300 ${isMenuOpen ? "block" : "hidden"
                         }`}
+                    style={{ zIndex: 50 }} // Ensure it floats above everything
                 >
                     <li className="py-2 sm:py-0">
                         <Link href="/" onClick={closeMenu}>

@@ -11,7 +11,7 @@ export default function TimeComponent() {
 
     // Hardcoded login credentials (for simplicity)
     const validUsername = "admin";
-    const validPassword = "password123";
+    const validPassword = "admin";
 
     useEffect(() => {
         setTime(Date.now());

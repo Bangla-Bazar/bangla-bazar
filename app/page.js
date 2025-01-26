@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
 import BannerSection from "@/components/BannerSection";
 import TagProductsSlider from "@/components/TagProductsSlider";
-import Categories from "@/components/categories";
+import Categories from "@/components/Categories";
 
 export default function Home() {
   const router = useRouter();
@@ -25,7 +25,6 @@ export default function Home() {
       <BannerSection />
       <TagProductsSlider tag="Fruit" />
       <TagProductsSlider tag="Vegetable" />
-
     </div>
   );
 }

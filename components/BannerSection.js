@@ -40,11 +40,11 @@ export default function BannerSlider() {
                     autoplay={{ delay: 5000 }}
                     spaceBetween={30}
                     loop
-                    className="rounded-lg shadow-md"
+                    className="rounded-lg shadow-lg"
                 >
                     {slides.map((slide, index) => (
                         <SwiperSlide key={index}>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-blue-100 p-8 rounded-lg">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-gray-100 p-8 rounded-lg">
                                 {/* Image Section */}
                                 <div className="col-span-2 w-full h-96 relative">
                                     <Image
