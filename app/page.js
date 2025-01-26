@@ -21,9 +21,12 @@ export default function Home() {
         placeholder="Search for products..."
         onRedirect={handleSearchRedirect}
       />
-      <Categories tags={["Fruit", "Vegetable", "Dairy", "Meat", "Beverage"]} />
+      <Categories />
       <BannerSection />
+      <TagProductsSlider tag="Fresh" />
       <TagProductsSlider tag="Fruit" />
+      <TagProductsSlider tag="Bangladesh" />
+      <TagProductsSlider tag="Meat" />
       <TagProductsSlider tag="Vegetable" />
     </div>
   );
