@@ -23,7 +23,6 @@ export default function Home() {
       />
       <Categories />
       <BannerSection />
-      <TagProductsSlider tag="Pew" />
       <TagProductsSlider tag="Fruit" />
       <TagProductsSlider tag="Bangladesh" />
       <TagProductsSlider tag="Meat" />
