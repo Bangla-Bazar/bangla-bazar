@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { db, storage } from "@/utils/firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useRouter } from "next/navigation"; // Import Next.js router
+
 
 export default function AddProduct() {
     const [title, setTitle] = useState("");
@@ -17,6 +19,7 @@ export default function AddProduct() {
     const [lastDate, setLastDate] = useState("");
     const [successMessage, setSuccessMessage] = useState(null);
     const [allTags, setAllTags] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchTags = async () => {
@@ -188,7 +191,7 @@ export default function AddProduct() {
                             Add Another Product
                         </button>
                         <button
-                            onClick={() => setSuccessMessage(null)}
+                            onClick={() => router.push("/admin")} // Navigate to Admin Page
                             className="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg shadow hover:bg-gray-400"
                         >
                             Go to Admin Page
