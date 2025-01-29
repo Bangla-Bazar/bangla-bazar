@@ -1,5 +1,3 @@
-
-
 export default function ProductCard({ product }) {
     return (
         <div className="bg-white rounded-xl shadow-md transition-transform transform hover:scale-105 hover:shadow-xl p-6 flex flex-col border border-gray-200">
