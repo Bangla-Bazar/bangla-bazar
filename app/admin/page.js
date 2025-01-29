@@ -33,6 +33,8 @@ export default function Admin() {
         return () => unsubscribe();
     }, [router]); // Depend on router for redirecting
 
+    const [message, setMessage] = useState(null); // State for notifications
+
     const fetchProducts = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, "products"));
@@ -41,9 +43,10 @@ export default function Admin() {
                 ...doc.data(),
             }));
             setProducts(productsData);
+            setMessage({ type: "success", text: "Products loaded successfully!" });
         } catch (error) {
             console.error("Error fetching products:", error);
-            alert("Failed to fetch products. Please try again.");
+            setMessage({ type: "error", text: "Failed to fetch products. Please try again." });
         }
     };
 
@@ -51,20 +54,21 @@ export default function Admin() {
         try {
             await deleteDoc(doc(db, "products", productId));
             setProducts((prev) => prev.filter((product) => product.id !== productId));
-            alert("Product removed successfully!");
+            setMessage({ type: "success", text: "Product removed successfully!" });
         } catch (error) {
             console.error("Error removing product:", error);
-            alert("Failed to remove product.");
+            setMessage({ type: "error", text: "Failed to remove product." });
         }
     };
 
+    // Auto-hide notification after 3 seconds
+    useEffect(() => {
+        if (message) {
+            const timer = setTimeout(() => setMessage(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
 
-
-    const handleLogout = async () => {
-        await signOut(auth);
-        setIsLoggedIn(false);
-        router.push("/login"); // Redirect after logout
-    };
 
     // Sort and filter products
     const sortedProducts = products
@@ -85,19 +89,13 @@ export default function Admin() {
                             <h2 className="text-2xl sm:text-3xl font-semibold text-black">
                                 Welcome, {user?.email}!
                             </h2>
-                            <p className="text-base sm:text-lg text-black">
-                                You have <span className="font-bold">{products.length}</span> products in inventory
+                            <p className="text-base sm:text-lg text-black bg-gray-200 p-2 py-2 rounded-lg">
+                                Total Inventory : <span className="font-bold">{products.length}</span>
                             </p>
-                            <button
-                                onClick={handleLogout}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-full sm:w-auto"
-                            >
-                                Logout
-                            </button>
                         </div>
 
                         {/* Search Bar and Sorting Toggle */}
-                        <div className="flex flex-wrap justify-between items-center gap-4">
+                        <div className="flex flex-wrap justify-between items-center gap-2 py-4">
                             <input
                                 type="text"
                                 value={searchQuery}
@@ -105,78 +103,91 @@ export default function Admin() {
                                 placeholder="Search products..."
                                 className="w-full sm:w-80 p-3 bg-white rounded-md border-2 focus:ring-2"
                             />
-                            <a href="/admin/add" className="w-full sm:w-auto">
-                                <button className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+
+                            <div className="flex w-full sm:w-auto gap-2">
+                                <button
+                                    onClick={() => router.push("/admin/add")}
+                                    className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                >
                                     Add Product
                                 </button>
-                            </a>
-                            <button
-                                onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                            >
-                                Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
-                            </button>
+                                <button
+                                    onClick={() => router.push("/admin/banners")}
+                                    className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                >
+                                    Add Banners
+                                </button>
+                                <button
+                                    onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                                    className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                >
+                                    Sort {sortOrder === "asc" ? "A-Z" : "Z-A"}
+                                </button>
+                            </div>
                         </div>
 
 
+
                         {/* Product List */}
-                        <h3 className="text-2xl font-semibold text-center text-black mb-6">Product List</h3>
+
+
                         {sortedProducts.length === 0 ? (
                             <p className="text-center text-gray-600">No products found</p>
                         ) : (
                             <div className="overflow-x-auto rounded-lg shadow-lg">
                                 <table className="w-full bg-white bg-opacity-20 backdrop-blur-lg rounded-lg overflow-hidden">
                                     <thead>
-                                        <tr className="bg-gradient-to-r from-blue-500 to-blue-600">
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Date Added</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Image</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Title</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Description</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Price</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-white text-left">Actions</th>
+                                        <tr className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-left">
+                                            <th className="px-4 py-3 text-sm font-semibold">Date Added</th>
+                                            <th className="px-4 py-3 text-sm font-semibold">Image</th>
+                                            <th className="px-4 py-3 text-sm font-semibold">Title</th>
+                                            <th className="px-4 py-3 text-sm font-semibold hidden sm:table-cell">Description</th>
+                                            <th className="px-4 py-3 text-sm font-semibold">Price</th>
+                                            <th className="px-4 py-3 text-sm font-semibold">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {sortedProducts.map((product) => (
                                             <tr key={product.id} className="hover:bg-opacity-30 transition-all">
-                                                <td className="px-6 py-4">
+                                                <td className="px-4 py-3 text-sm">
                                                     {product.dateAdded ? new Date(product.dateAdded).toLocaleDateString() : "N/A"}
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <img src={product.imageUrl} alt={product.title} className="w-16 h-16 object-cover rounded-lg" />
+                                                <td className="px-4 py-3">
+                                                    <img src={product.imageUrl} alt={product.title} className="w-16 h-16 object-cover rounded-lg mx-auto" />
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    {product.title}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {product.description}
-                                                </td>
-                                                <td className="px-6 py-4 font-bold">
-                                                    {
-                                                        `$${product.price.toFixed(2)}`}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-row space-x-2">
-                                                        <>
-                                                            <button
-                                                                onClick={() => router.push(`/admin/edit/${product.id}`)}
-                                                                className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                                                            >
-                                                                Edit
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleRemoveProduct(product.id)}
-                                                                className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-                                                            >
-                                                                Remove
-                                                            </button>
-                                                        </>
+                                                <td className="px-4 py-3 text-sm">{product.title}</td>
+                                                <td className="px-4 py-3 text-sm hidden sm:table-cell">{product.description}</td>
+                                                <td className="px-4 py-3 text-sm font-bold">{`$${product.price.toFixed(2)}`}</td>
+                                                <td className="px-4 py-3">
+                                                    <div className="flex flex-wrap gap-1 justify-center sm:justify-start">
+                                                        <button
+                                                            onClick={() => router.push(`/admin/edit/${product.id}`)}
+                                                            className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 w-full sm:w-auto"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleRemoveProduct(product.id)}
+                                                            className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 w-full sm:w-auto"
+                                                        >
+                                                            Remove
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+                            </div>
+                        )}
+
+                        {/* Notification */}
+                        {message && (
+                            <div
+                                className={`text-center px-4 py-2 rounded-lg mb-4 text-white ${message.type === "success" ? "bg-green-500" : "bg-red-500"
+                                    }`}
+                            >
+                                {message.text}
                             </div>
                         )}
                     </div>
