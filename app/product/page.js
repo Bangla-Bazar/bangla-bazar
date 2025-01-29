@@ -1,5 +1,5 @@
 "use client";
-
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { db } from "@/utils/firebase";
@@ -9,6 +9,15 @@ import SearchBar from "@/components/SearchBar";
 import Categories from "@/components/Categories";
 
 export default function Product() {
+    return (
+        <Suspense fallback={<div>Loading products...</div>}>
+            <ProductContent />
+        </Suspense>
+    );
+}
+
+
+function ProductContent() {
     const [allProducts, setAllProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
