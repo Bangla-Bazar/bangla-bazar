@@ -1,22 +1,71 @@
-// import Link from "next/link";
-
-// export default function Categories({ tags }) {
-//     return (
-//         <div className="container mx-auto p-4">
-//             <h2 className="text-xl font-semibold mb-4">Categories</h2>
-//             {tags.map((tag, index) => (
-//                 <p key={index}>{tag}</p>
-//             ))}
-//         </div>
-//     );
-// }
-
 import Link from "next/link";
+import { useRef, useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../utils/firebase"; // Adjust the path to your Firebase initialization file
 
-export default function Categories({ tags }) {
+export default function Categories() {
+    const scrollContainer = useRef(null);
+    const [isMobile, setIsMobile] = useState(false);
+    const [tags, setTags] = useState([]);
+
+    // Fetch and sort tags from Firestore
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const tagsCollection = collection(db, "tags"); // Adjust collection name if needed
+                const tagsSnapshot = await getDocs(tagsCollection);
+                const tagsList = tagsSnapshot.docs
+                    .map((doc) => doc.data().name) // Assuming each document has a 'name' field
+                    .sort((a, b) => a.localeCompare(b)); // Sort tags alphabetically
+                setTags(tagsList);
+            } catch (error) {
+                console.error("Error fetching tags:", error);
+            }
+        };
+        fetchTags();
+    }, []);
+
+    // Handle resize to determine mobile view
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        handleResize(); // Set initial state
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Handle horizontal scroll for desktop
+    const handleScroll = (e) => {
+        if (!isMobile) {
+            e.preventDefault();
+            scrollContainer.current.scrollLeft += e.deltaY * 2;
+        }
+    };
+
+    // Handle swipe gestures for mobile
+    const handleTouchStart = (e) => {
+        scrollContainer.current.startX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        if (!scrollContainer.current.startX) return;
+        const deltaX = scrollContainer.current.startX - e.touches[0].clientX;
+        scrollContainer.current.scrollLeft += deltaX;
+        scrollContainer.current.startX = e.touches[0].clientX;
+    };
+
     return (
-        <div className="container mx-auto p-4">
-            <nav className="flex flex-wrap gap-4">
+        <div className="container mx-auto px-6 py-4">
+
+            <nav
+                ref={scrollContainer}
+                onWheel={handleScroll}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                className={`
+                    flex gap-4 p-2 overflow-x-auto whitespace-nowrap scrollbar-hide
+                    bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md px-4 py-3
+                `}
+            >
                 {tags.map((tag, index) => (
                     <Link
                         href={{
@@ -25,13 +74,32 @@ export default function Categories({ tags }) {
                         }}
                         key={index}
                     >
-
-                        {tag}
-
+                        <span
+                            className={`
+                                flex-shrink-0 px-6 py-2 text-sm font-medium
+                                bg-white text-gray-700 border border-blue-300
+                                rounded-full shadow-md cursor-pointer transition-all
+                                hover:bg-blue-500 hover:text-white hover:shadow-lg
+                                active:scale-95
+                            `}
+                        >
+                            {tag}
+                        </span>
                     </Link>
                 ))}
             </nav>
+
+            {/* Styling for swipe and snapping behavior */}
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    nav {
+                        scroll-snap-type: x mandatory;
+                    }
+                    nav > * {
+                        scroll-snap-align: center;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
-

@@ -7,12 +7,11 @@ export const metadata = {
   description: 'Bangla Bazar Lansdale PA',
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`flex flex-col min-h-screen bg-gray-100 text-black`}
-      >
+      <body className="flex flex-col min-h-screen bg-gray-100 text-black">
         <Navbar />
         <main className="flex-grow container mx-auto p-4">{children}</main>
         <Footer />
