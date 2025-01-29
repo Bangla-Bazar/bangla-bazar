@@ -75,7 +75,9 @@ export default function AddProduct() {
         }
 
         try {
-            const imageRef = ref(storage, `products/${image.name}`);
+            const newImageTagId = uuidv4();
+
+            const imageRef = ref(storage, `products/${newImageTagId}/${image.name}`);
             await uploadBytes(imageRef, image);
             const imageUrl = await getDownloadURL(imageRef);
 
